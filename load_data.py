@@ -27,6 +27,7 @@ def get_train_data_info_xml(annotations_path):
         annotations_list.append(annotation)
     annotations_list = np.array(annotations_list)
     sorted = annotations_list[np.argsort(annotations_list[:, 0])]
+    sorted = np.hstack((sorted, np.arange(sorted.shape[0]).reshape(sorted.shape[0], 1)))
     return sorted
 
 def get_train_data_info_csv(annotations_paths):
@@ -69,11 +70,12 @@ def create_boundingbox_array(data_row):
 def create_boundingbox_array_csv(data_row):
     return np.array([int(data_row[5]), int(data_row[4]), int(data_row[7]), int(data_row[6])])
 
-def resize_image_boundingbox(read_path, write_path, bounding_box, size):
+def resize_image_boundingbox(read_path, write_path, bounding_box, size, ind):
     img = read_img(read_path)
     resize_img = cv2.resize(img, (size, size))
     resized_mask = cv2.resize(create_mask(bounding_box, img), (size, size))
-    new_path = str(write_path/read_path.parts[-1])
+    # new_path = str(write_path/read_path.parts[-1])
+    new_path = str(write_path) + '/Cars' + str(ind) + '.png'
     # cv2.imwrite(new_path, cv2.cvtColor(resize_img, cv2.COLOR_RGB2GRAY))
     cv2.imwrite(new_path, cv2.cvtColor(resize_img, cv2.COLOR_RGB2BGR))
     return mask_to_boundingbox(resized_mask)
@@ -193,29 +195,34 @@ def preprocessing():
         os.makedirs(path)
 
     resized_data_path = Path(path)
+    ind = 0
     for img_info in train_data:
         read_path = Path(str(images_path) + '/Cars' + str(img_info[0]) + '.png')
-        new_boundingbox = resize_image_boundingbox(read_path, resized_data_path, create_boundingbox_array(img_info), 224)
-
+        new_boundingbox = resize_image_boundingbox(read_path, resized_data_path, create_boundingbox_array(img_info), 224, ind)
+        ind += 1
         new_boundingboxes.append(new_boundingbox)
     train_data = np.hstack((train_data, new_boundingboxes))
 
+    csv_images = filelist(Path("raw_data/dataset2"), '.jpg') + filelist(Path("raw_data/dataset3"), '.jpg') + filelist(Path("raw_data/dataset4"), '.jpg')
     csv_annotations_paths = [Path("raw_data/dataset2/annotations.csv"), Path("raw_data/dataset3/annotations.csv"), Path("raw_data/dataset4/annotations.csv")]
     csv_train_data = np.array(get_train_data_info_csv(csv_annotations_paths))
-    csv_images = filelist(Path("raw_data/dataset2"), '.jpg') + filelist(Path("raw_data/dataset3"), '.jpg') + filelist(Path("raw_data/dataset4"), '.jpg')
 
-    new_boundingboxes = []
+    # new_boundingboxes = []
     index = train_data.shape[0]
+    modified_csv_train_data = []
     for img_info in csv_train_data:
-        read_path = Path(find_csv_read_path(img_info[0], csv_images))
-        new_boundingbox = resize_image_boundingbox_csv(read_path, resized_data_path, create_boundingbox_array_csv(img_info), 224, index)
-        index += 1
-        new_boundingboxes.append(new_boundingbox)
-    csv_train_data = np.hstack((csv_train_data, new_boundingboxes))
+        read_path = find_csv_read_path(img_info[0], csv_images)
+        if read_path != None:
+            new_boundingbox = resize_image_boundingbox_csv(Path(read_path), resized_data_path, create_boundingbox_array_csv(img_info), 224, index)
+            index += 1
+            # new_boundingboxes.append(new_boundingbox)
+            new_row = list(img_info) + [str(x) for x in new_boundingbox]
+            modified_csv_train_data.append(new_row)
+    # csv_train_data = np.hstack((csv_train_data, new_boundingboxes))
+    csv_train_data = np.array(modified_csv_train_data)
     index_array = np.arange(train_data.shape[0], index).reshape(index - train_data.shape[0], 1)
     csv_train_data = np.hstack((index_array, csv_train_data))
-
-    output = np.hstack((np.reshape(train_data[:, 0], (train_data.shape[0], 1)), train_data[:, 7:]))
+    output = np.hstack((np.reshape(train_data[:, 7], (train_data.shape[0], 1)), train_data[:, 8:]))
 
     output2 = np.delete(csv_train_data, 1, 1)
     output2 = np.delete(output2, 3, 1)
@@ -225,7 +232,6 @@ def preprocessing():
     total_output = np.vstack((output, output2))
     np.savetxt('boundingbox.csv', total_output, delimiter=',', fmt='%d')
 
-
-
+preprocessing()
 
 
