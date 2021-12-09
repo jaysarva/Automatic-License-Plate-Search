@@ -71,8 +71,6 @@ def calculate_rough_accuracy():
         print(i)
     print("Accuracy = " + str(total / n))
                  
-calculate_rough_accuracy()
-
 for i in range(n):
     print(i)
     path = "preprocessed_data/resized_images/Cars" + str(i) + ".png"
@@ -82,6 +80,8 @@ for i in range(n):
     im = Image.fromarray(new_image)
     im.save("licenses/license"+str(i)+".png")
 
-
+    
+calculate_rough_accuracy()
+  
 
     
