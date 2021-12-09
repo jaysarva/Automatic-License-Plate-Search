@@ -68,19 +68,15 @@ def calculate_rough_accuracy():
         
         if (abs(b - row[1]) <= 0.2*w) and (abs(d - row[3]) <= 0.2*w) and (abs(c - row[2]) <= 0.2*h) and (abs(e - row[4]) <= 0.2*h):
             total += 1
+        
+        image = imread(path)
+        new_image = image[b:d, c:e, :]
+        im = Image.fromarray(new_image)
+        im.save("licenses/license"+str(i)+".png")
         print(i)
+        
     print("Accuracy = " + str(total / n))
-                 
-for i in range(n):
-    print(i)
-    path = "preprocessed_data/resized_images/Cars" + str(i) + ".png"
-    [x1,x2,x3,x4,x5] = predict_image(path, my_model)
-    image = imread(path)
-    new_image = image[x2:x4, x3:x5, :]
-    im = Image.fromarray(new_image)
-    im.save("licenses/license"+str(i)+".png")
-
-    
+                     
 calculate_rough_accuracy()
   
 
