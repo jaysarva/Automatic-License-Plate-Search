@@ -2,9 +2,12 @@ from tensorflow.keras.models import load_model
 import numpy as np
 from skimage.io import imread
 import matplotlib.pyplot as plt
-
 from PIL import Image
-n = 500
+import os
+
+path, dirs, files = next(os.walk("preprocessed_data/resized_images"))
+n = len(files)
+
 my_model = load_model("my_model")
 
 def predict_image(image_path, model):
