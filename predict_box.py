@@ -4,7 +4,7 @@ from skimage.io import imread
 import matplotlib.pyplot as plt
 
 from PIL import Image
-
+n = 500
 my_model = load_model("my_model")
 
 def predict_image(image_path, model):
@@ -23,23 +23,29 @@ def predict_image(image_path, model):
         startY2 = startY
         startY = endY
         endY = startY2
-    
+        
     w = 224
     h = 224
-    
-    if startX < 0:
-        startX = 0
-    if startY < 0:
-        startY = 0
-    if endX > w:
-        startX = w
-    if endY > h:
-        startY = h
     
     startX = int(startX * w)
     startY = int(startY * h)
     endX = int(endX * w)
     endY = int(endY * h)
+    
+    if startX == endX :
+        startX = startX - 1
+        endX = endX + 1
+    if startY == endY:
+        startY = startY - 1
+        endY = endY + 1
+    if startX < 0:
+        startX = 0
+    if startY > 0:
+        startY = 0
+    if endX > w:
+        endX = w
+    if endY > h:
+        endY = h    
     return [image_path, startX, startY, endX, endY]
 
 
@@ -49,7 +55,7 @@ def calculate_rough_accuracy():
     rows = np.loadtxt(file, delimiter=",")
     #print(rows)
     total = 0
-    for i in range(888):
+    for i in range(n):
         image_path = "preprocessed_data/resized_images/Cars" + str(i) + ".png"
         [a,b,c,d,e] = predict_image(image_path,my_model)
         row = rows[i]
@@ -60,17 +66,19 @@ def calculate_rough_accuracy():
         if (abs(b - row[1]) <= 0.2*w) and (abs(d - row[3]) <= 0.2*w) and (abs(c - row[2]) <= 0.2*h) and (abs(e - row[4]) <= 0.2*h):
             total += 1
         print(i)
-    print("Accuracy = " + str(total / 888))
-              
+    print("Accuracy = " + str(total / n))
+                 
+calculate_rough_accuracy()
 
-   
-   
-for i in range(888):
+for i in range(n):
+    print(i)
     path = "preprocessed_data/resized_images/Cars" + str(i) + ".png"
     [x1,x2,x3,x4,x5] = predict_image(path, my_model)
     image = imread(path)
     new_image = image[x2:x4, x3:x5, :]
     im = Image.fromarray(new_image)
     im.save("licenses/license"+str(i)+".png")
+
+
 
     
