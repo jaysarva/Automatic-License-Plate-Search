@@ -75,7 +75,8 @@ def calculate_rough_accuracy():
         else:
             shutil.rmtree(licenses_path)
             os.makedirs(licenses_path)
-            im.save("test_licenses/license"+str(i)+".png")
+            
+        im.save("test_licenses/license"+str(i)+".png")
     
     print("Accuracy = " + str(total / n))
                  
