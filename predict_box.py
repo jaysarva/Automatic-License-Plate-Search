@@ -17,7 +17,7 @@ def predict_image(image_path, model):
     image = np.expand_dims(image, axis=0)
     
     preds = model.predict(image)[0]
-    (startX, startY, endX, endY) = preds
+    (startY, startX, endY, endX) = preds
     
     if startX > endX:
         startX2 = startX
@@ -43,7 +43,7 @@ def predict_image(image_path, model):
         startY = startY - 1
         endY = endY + 1
     
-    return [image_path, startX, startY, endX, endY]
+    return [image_path, startY, startX, endY, endX]
 
 
    
@@ -54,17 +54,17 @@ def calculate_rough_accuracy():
     total = 0
     for i in range(n):
         image_path = "preprocessed_data/resized_images/Cars" + str(i) + ".png"
-        [image_path, startX, startY, endX, endY] = predict_image(image_path,my_model)
+        [image_path, startY, startX, endY, endX] = predict_image(image_path,my_model)
         row = rows[i]
         
-        w = row[3] - row[1]
-        h = row[4] - row[2]
+        h = row[3] - row[1]
+        w = row[4] - row[2]
         
-        if (abs(startX - row[1]) <= 0.3*w) and (abs(endX - row[3]) <= 0.3*w) and (abs(startY - row[2]) <= 0.3*h) and (abs(endY - row[4]) <= 0.3*h):
+        if (abs(startY - row[1]) <= 0.3*h) and (abs(endY - row[3]) <= 0.3*h) and (abs(startX - row[2]) <= 0.3*w) and (abs(endX - row[4]) <= 0.3*w):
             total += 1
         print(i)
         image = imread(image_path)
-        cv2.rectangle(image, (startY, startX), (endY, endX),(255, 255, 0), 2)
+        cv2.rectangle(image, (startX, startY), (endX, endY),(255, 255, 0), 1)
         im = Image.fromarray(image)
         im.save("licenses/license"+str(i)+".png")
     
