@@ -203,8 +203,11 @@ def preprocessing():
         new_boundingboxes.append(new_boundingbox)
     train_data = np.hstack((train_data, new_boundingboxes))
 
-    csv_images = filelist(Path("raw_data/dataset2"), '.jpg') + filelist(Path("raw_data/dataset3"), '.jpg') + filelist(Path("raw_data/dataset4"), '.jpg')
-    csv_annotations_paths = [Path("raw_data/dataset2/annotations.csv"), Path("raw_data/dataset3/annotations.csv"), Path("raw_data/dataset4/annotations.csv")]
+    # csv_images = filelist(Path("raw_data/dataset2"), '.jpg') + filelist(Path("raw_data/dataset3"), '.jpg') + filelist(Path("raw_data/dataset4"), '.jpg')
+    # csv_annotations_paths = [Path("raw_data/dataset2/annotations.csv"), Path("raw_data/dataset3/annotations.csv"), Path("raw_data/dataset4/annotations.csv")]
+    csv_images = filelist(Path("raw_data/dataset2"), '.jpg') + filelist(Path("raw_data/dataset4"), '.jpg')
+    csv_annotations_paths = [Path("raw_data/dataset2/annotations.csv"), Path("raw_data/dataset4/annotations.csv")]
+    
     csv_train_data = np.array(get_train_data_info_csv(csv_annotations_paths))
 
     # new_boundingboxes = []
