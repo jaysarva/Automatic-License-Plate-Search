@@ -26,6 +26,12 @@ def create_model(rows):
 
         image = imread("preprocessed_data/resized_images/Cars" + str(int(filename)) + ".png")
         
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        image = np.zeros_like(image)
+        image[:,:,0] = gray
+        image[:,:,1] = gray
+        image[:,:,2] = gray
+        
         h = img_size
         w = img_size
         #print(image)
