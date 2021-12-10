@@ -49,6 +49,14 @@ def predict_image(image_path, model):
 
    
 def calculate_rough_accuracy():
+    licenses_path = "test_licenses"
+    isExist = os.path.exists(licenses_path)
+    if not isExist:
+        os.makedirs(licenses_path)
+    else:
+        shutil.rmtree(licenses_path)
+        os.makedirs(licenses_path)
+
     file = open("test_data/boundingbox.csv")
     rows = np.loadtxt(file, delimiter=",")
     #print(rows)
@@ -67,15 +75,6 @@ def calculate_rough_accuracy():
         image = imread(image_path)
         cv2.rectangle(image, (startX, startY), (endX, endY),(255, 255, 0), 1)
         im = Image.fromarray(image)
-
-        licenses_path = "test_licenses"
-        isExist = os.path.exists(licenses_path)
-        if not isExist:
-            os.makedirs(licenses_path)
-        else:
-            shutil.rmtree(licenses_path)
-            os.makedirs(licenses_path)
-            
         im.save("test_licenses/license"+str(i)+".png")
     
     print("Accuracy = " + str(total / n))
