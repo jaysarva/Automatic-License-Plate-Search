@@ -220,7 +220,7 @@ def preprocessing():
     for img_info in csv_train_data:
         read_path = find_csv_read_path(img_info[0], csv_images)
         if read_path != None:
-            new_boundingbox = resize_image_boundingbox_csv(Path(read_path), resized_data_path, create_boundingbox_array_csv(img_info), 224, index)
+            # new_boundingbox = resize_image_boundingbox_csv(Path(read_path), resized_data_path, create_boundingbox_array_csv(img_info), 224, index)
             index += 1
             # new_boundingboxes.append(new_boundingbox)
             new_row = list(img_info) + [str(x) for x in new_boundingbox]
@@ -236,7 +236,8 @@ def preprocessing():
     output2 = output2.astype(np.int)
     output2 = np.hstack((np.reshape(output2[:, 0], (output2.shape[0], 1)), output2[:, 7:]))
 
-    total_output = np.vstack((output, output2))
+    # total_output = np.vstack((output, output2))
+    total_output = output
     np.savetxt('boundingbox.csv', total_output, delimiter=',', fmt='%d')
 
 preprocessing()
