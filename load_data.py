@@ -229,22 +229,30 @@ def preprocessing():
     output2 = np.hstack((np.reshape(output2[:, 0], (output2.shape[0], 1)), output2[:, 7:]))
 
     # Augmentation
-    augmented_output = []
-    index = train_data.shape[0]
-    for row in train_data:
-        read_path = 'preprocessed_data/resized_images/Cars' + str(row[7]) + '.png'
-        im, bb = transformsXY(str(read_path), row[8:], True)
-        im = im * 255
-        new_path = 'preprocessed_data/resized_images/Cars' + str(index) + '.png'
-        cv2.imwrite(new_path, cv2.cvtColor(im, cv2.COLOR_RGB2BGR))
-        aug = [index, bb[0], bb[1], bb[2], bb[3]]
-        augmented_output.append(aug)
-        index += 1
-    augmented_output = np.array(augmented_output)
+    # augmented_output = []
+    # index = train_data.shape[0]
+    # size = 224
+    # for row in train_data:
+    #     read_path = 'preprocessed_data/resized_images/Cars' + str(row[7]) + '.png'
+    #     im = cv2.imread(read_path)
+    #     im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+    #     show_corner_bb(im, row[8:])
+    #     im, bb = transformsXY(str(read_path), row[8:], True)
+    #     im = cv2.resize(im, (size, size))
+    #     resized_mask = cv2.resize(create_mask(bb, im), (size, size))
+    #     new_bb = mask_to_boundingbox(resized_mask)
+    #     show_corner_bb(im, new_bb)
+    #     im = im * 255
+    #     write_path = 'preprocessed_data/resized_images/Cars' + str(index) + '.png'
+    #     cv2.imwrite(write_path, cv2.cvtColor(im, cv2.COLOR_RGB2BGR))
+    #     aug = [index, new_bb[0], new_bb[1], new_bb[2], new_bb[3]]
+    #     augmented_output.append(aug)
+    #     index += 1
+    # augmented_output = np.array(augmented_output)
 
     # total_output = np.vstack((output, output2))
-    # total_output = output
-    total_output = np.vstack((output, augmented_output))
+    total_output = output
+    # total_output = np.vstack((output, augmented_output))
     np.savetxt('boundingbox.csv', total_output, delimiter=',', fmt='%d')
 
 
