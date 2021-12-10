@@ -11,7 +11,6 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import io
 import csv
-import cv2
 
 
 def create_model(rows):
