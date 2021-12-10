@@ -13,12 +13,6 @@ my_model = load_model("my_model")
 def predict_image(image_path, model):
     image = imread(image_path)
     
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    image = np.zeros_like(image)
-    image[:,:,0] = gray
-    image[:,:,1] = gray
-    image[:,:,2] = gray
-    
     image = image / 255.0
     image = np.expand_dims(image, axis=0)
     
