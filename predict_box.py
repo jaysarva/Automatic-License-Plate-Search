@@ -3,8 +3,8 @@ import numpy as np
 from skimage.io import imread
 import matplotlib.pyplot as plt
 import os
+import shutil
 from PIL import Image
-import os
 
 path, dirs, files = next(os.walk("preprocessed_data/resized_images"))
 n = len(files)
@@ -55,9 +55,18 @@ def predict_image(image_path, model):
 
    
 def calculate_rough_accuracy():
+
+    licenses_path = "licenses"
+    isExist = os.path.exists(licenses_path)
+    if not isExist:
+        os.makedirs(licenses_path)
+    else:
+        shutil.rmtree(licenses_path)
+        os.makedirs(licenses_path)
+
     file = open("boundingbox.csv")
     rows = np.loadtxt(file, delimiter=",")
-    #print(rows)
+
     total = 0
     for i in range(n):
         image_path = "preprocessed_data/resized_images/Cars" + str(i) + ".png"
