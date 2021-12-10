@@ -1,4 +1,5 @@
 import os
+import shutil
 import xml.etree.ElementTree as ET
 from pathlib import Path
 import numpy as np
@@ -192,6 +193,9 @@ def preprocessing():
     path = "preprocessed_data/resized_images"
     isExist = os.path.exists(path)
     if not isExist:
+        os.makedirs(path)
+    else:
+        shutil.rmtree(path)
         os.makedirs(path)
 
     resized_data_path = Path(path)
