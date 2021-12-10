@@ -166,22 +166,14 @@ def show_corner_bb(im, bb):
 ## EXPORT RESULT ##
 ###################
 
-# sample_img_num = 400
+# path = "preprocessed_data/resized_images"
+# sample_img_num = 100
 # read_path = Path(str(path) + '/Cars' + str(train_data[sample_img_num][0]) + '.png')
 # im = cv2.imread(str(read_path))
 # im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
-# show_corner_bb(im, train_data[sample_img_num][7:])
+# show_corner_bb(im, train_data[sample_img_num][8:])
 
 # im, bb = transformsXY(str(read_path), train_data[sample_img_num][7:], True)
-# show_corner_bb(im, bb)
-
-# sample_img_num = 200
-# read_path = Path(find_csv_read_path(csv_train_data[sample_img_num][0], csv_images))
-# im = cv2.imread(str(read_path))
-# im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
-# show_corner_bb(im, csv_train_data[sample_img_num][9:])
-
-# im, bb = transformsXY(str(read_path), csv_train_data[sample_img_num][9:], True)
 # show_corner_bb(im, bb)
 
 def preprocessing():
@@ -236,9 +228,34 @@ def preprocessing():
     output2 = output2.astype(np.int)
     output2 = np.hstack((np.reshape(output2[:, 0], (output2.shape[0], 1)), output2[:, 7:]))
 
+    # Augmentation
+    augmented_output = []
+    index = train_data.shape[0]
+    for row in train_data:
+        read_path = 'preprocessed_data/resized_images/Cars' + str(row[7]) + '.png'
+        im, bb = transformsXY(str(read_path), row[8:], True)
+        im = im * 255
+        new_path = 'preprocessed_data/resized_images/Cars' + str(index) + '.png'
+        cv2.imwrite(new_path, cv2.cvtColor(im, cv2.COLOR_RGB2BGR))
+        aug = [index, bb[0], bb[1], bb[2], bb[3]]
+        augmented_output.append(aug)
+        index += 1
+    augmented_output = np.array(augmented_output)
+
     # total_output = np.vstack((output, output2))
-    total_output = output
+    # total_output = output
+    total_output = np.vstack((output, augmented_output))
     np.savetxt('boundingbox.csv', total_output, delimiter=',', fmt='%d')
+
+
+    # path = "preprocessed_data/resized_images"
+    # sample_img_num = 50
+    # read_path = Path(str(path) + '/Cars' + str(train_data[sample_img_num][7]) + '.png')
+    # im = cv2.imread(str(read_path))
+    # im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+    # show_corner_bb(im, train_data[sample_img_num][8:])
+    # im, bb = transformsXY(str(read_path), train_data[sample_img_num][8:], True)
+    # show_corner_bb(im, bb)
 
 preprocessing()
 
