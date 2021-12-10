@@ -70,12 +70,12 @@ def create_model(rows):
     model = Model(inputs=vgg.input, outputs=bboxHead)
 
 
-    opt = Adam(lr= 1e-5)
+    opt = Adam(lr= 0.5*1e-4)
     model.compile(loss="mse", optimizer=opt)
     print(model.summary())
 # train the network for bounding box regression
     print("[INFO] training bounding box regressor...")
-    H = model.fit(trainImages, trainTargets, validation_data=(testImages, testTargets), batch_size= 32, epochs= 50, verbose=1)
+    H = model.fit(trainImages, trainTargets, validation_data=(testImages, testTargets), batch_size= 32, epochs= 30, verbose=1)
     
     model.save("my_model", save_format="h5")
     print("Finish Saving the model")
