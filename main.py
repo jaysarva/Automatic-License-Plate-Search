@@ -8,8 +8,6 @@ import tensorflow as tf
 import glob
 import cv2
 
-#preprocessing()
-
 file = open("boundingbox.csv")
 rows = np.loadtxt(file, delimiter=",")
 # use saved weights for ocr model

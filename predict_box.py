@@ -17,6 +17,7 @@ def predict_image(image_path, model):
     
     preds = model.predict(image)[0]
     (startX, startY, endX, endY) = preds
+    # (startY, startX, endY, endX) = preds
     
     if startX > endX:
         startX2 = startX
