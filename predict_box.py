@@ -48,11 +48,13 @@ def predict_image(image_path, model):
    
 def calculate_rough_accuracy():
     file = open("boundingbox.csv")
+    file = open("test_data_v2/boundingbox.csv")
     rows = np.loadtxt(file, delimiter=",")
     #print(rows)
     total = 0
-    for i in range(50):
-        image_path = "preprocessed_data/resized_images/Cars" + str(i) + ".png"
+    for i in range(100):
+        # image_path = "preprocessed_data/resized_images/Cars" + str(i) + ".png"
+        image_path = "test_data_v2/preprocessed_data/Cars" + str(i) + ".png"
         [image_path, startX, startY, endX, endY] = predict_image(image_path,my_model)
         row = rows[i]
         
