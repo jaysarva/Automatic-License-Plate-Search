@@ -51,7 +51,7 @@ def calculate_rough_accuracy():
     rows = np.loadtxt(file, delimiter=",")
     #print(rows)
     total = 0
-    for i in range(50):
+    for i in range(n):
         image_path = "test_data_v5/data/Cars" + str(i) + ".png"
         [image_path, startX, startY, endX, endY] = predict_image(image_path,my_model)
         row = rows[i]
