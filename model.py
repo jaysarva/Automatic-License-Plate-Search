@@ -24,7 +24,8 @@ def create_model(rows):
         
         (filename, startX, startY, endX, endY) = row
 
-        image = imread("preprocessed_data/resized_images/Cars" + str(int(filename)) + ".png")
+        # image = imread("preprocessed_data/resized_images/Cars" + str(int(filename)) + ".png")
+        image = imread("test_data_v2/preprocessed/Cars" + str(int(filename)) + ".png")
         
         h = img_size
         w = img_size
@@ -45,7 +46,7 @@ def create_model(rows):
     data = data / 255.0
     
     print(np.shape(data))
-    split = train_test_split(data, targets, test_size=0.15, random_state=42)
+    split = train_test_split(data, targets, test_size=0.1, random_state=42)
     
     print("DONE 2")
 
@@ -83,7 +84,7 @@ def create_model(rows):
 
 
 
-file = open("boundingbox.csv")
+file = open("test_data_v2/boundingbox.csv")
 rows = np.loadtxt(file, delimiter=",")
 
 create_model(rows)
