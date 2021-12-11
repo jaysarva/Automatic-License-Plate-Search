@@ -60,7 +60,6 @@ def calculate_rough_accuracy():
         h = row[4] - row[2]
         
         if (abs(startX - row[1]) <= 0.3*w) and (abs(endX - row[3]) <= 0.3*w) and (abs(startY - row[2]) <= 0.3*h) and (abs(endY - row[4]) <= 0.3*h):
-            print(image_path)
             total += 1
         print(i)
         image = imread(image_path)
