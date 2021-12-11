@@ -6,7 +6,7 @@ import os
 from PIL import Image
 import cv2
 
-path, dirs, files = next(os.walk("test_data_v4/data"))
+path, dirs, files = next(os.walk("test_data_v5/data"))
 n = len(files)
 my_model = load_model("my_model")
 
@@ -47,12 +47,12 @@ def predict_image(image_path, model):
 
    
 def calculate_rough_accuracy():
-    file = open("test_data_v4/boundingbox.csv")
+    file = open("test_data_v5/boundingbox.csv")
     rows = np.loadtxt(file, delimiter=",")
     #print(rows)
     total = 0
     for i in range(50):
-        image_path = "test_data_v4/data/Cars" + str(i) + ".png"
+        image_path = "test_data_v5/data/Cars" + str(i) + ".png"
         [image_path, startX, startY, endX, endY] = predict_image(image_path,my_model)
         row = rows[i]
         
@@ -60,12 +60,13 @@ def calculate_rough_accuracy():
         h = row[4] - row[2]
         
         if (abs(startX - row[1]) <= 0.3*w) and (abs(endX - row[3]) <= 0.3*w) and (abs(startY - row[2]) <= 0.3*h) and (abs(endY - row[4]) <= 0.3*h):
+            print(image_path)
             total += 1
         print(i)
         image = imread(image_path)
         cv2.rectangle(image, (startY, startX), (endY, endX),(255, 255, 0), 2)
         im = Image.fromarray(image)
-        im.save("licenses_v4/license"+str(i)+".png")
+        im.save("licenses_v5/license"+str(i)+".png")
     
     print("Accuracy = " + str(total / n))
                  
