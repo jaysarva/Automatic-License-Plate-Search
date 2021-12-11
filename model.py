@@ -84,7 +84,7 @@ def create_model(rows):
 
 
 
-file = open("train_data_v3/boundingbox.csv")
+file = open("train_data_v3/boundingbox_net.csv")
 rows = np.loadtxt(file, delimiter=",")
 
 create_model(rows)
