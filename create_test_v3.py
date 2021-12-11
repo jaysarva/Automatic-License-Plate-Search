@@ -15,4 +15,4 @@ rows2 = np.loadtxt(file2, delimiter=",")
 for i in range(100, 150):
     rows2[i][0] = int(rows2[i][0]) - 100
 
-np.savetxt("test_data_v4/boundingbox_net.csv", rows2[100:150], delimiter=',', fmt='%d')
+np.savetxt("test_data_v4/boundingbox.csv", rows2[100:150], delimiter=',', fmt='%d')
