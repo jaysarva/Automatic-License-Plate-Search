@@ -150,9 +150,10 @@ def detect(img_rgb):
 
     # List of final crops
     crops = []
-
+    print(1)
     # Loop over contours and find license plates
     for cnt in contours:
+        print(2)
         x, y, w, h = cv2.boundingRect(cnt)
 
         # Conditions on crops dimensions and area
