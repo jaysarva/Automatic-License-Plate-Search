@@ -1,7 +1,7 @@
 import numpy as np
 #from load_data import preprocessing
 #from model import create_model
-from ocr import train, predict
+#from ocr import train, predict
 from segmentation import segmentImage
 #from predict_box import predict_image
 #import tensorflow as tf 
@@ -25,12 +25,17 @@ bounded_plate = imread(bounded_image_path)
 
 segmented_plates = segmentImage(bounded_plate)
 print(len(segmented_plates))
-#imageio.imwrite('segmentedImage.jpeg', segmented_plates[0])
+#print(segmented_plates[0])
+#cur_img = segmented_plates[0]
+#frame_normed = 255 * (cur_img - cur_img.min()) / (cur_img.max() - cur_img.min())
+#frame_normed = np.array(frame_normed, np.int)
+
+#cv2.imwrite("savedImage.png", frame_normed)
 nums = []
 for plate_nums in segmented_plates:
     plate_nums = np.expand_dims(plate_nums, axis=0)
     print(plate_nums.shape)
-    all_nums = predict(np.array(plate_nums))
+    all_nums = predict(plate_nums)
     nums.append(all_nums)
 print(nums)
 #for index, row in enumerate(license_plates_bounding_points):
