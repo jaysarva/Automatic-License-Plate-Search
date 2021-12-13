@@ -127,7 +127,7 @@ def four_point_transform(image, pts):
 
 
 def detect(img_rgb):
-
+    img_rgb = img_rgb[2:img_rgb.shape[0] - 2, 2:img_rgb.shape[1] - 2]
     img = img_rgb.copy()
     input_height = img_rgb.shape[0]
     input_width = img_rgb.shape[1]
@@ -150,10 +150,10 @@ def detect(img_rgb):
 
     # List of final crops
     crops = []
-    print(1)
+    #print(1)
     # Loop over contours and find license plates
     for cnt in contours:
-        print(2)
+        #print(2)
         x, y, w, h = cv2.boundingRect(cnt)
 
         # Conditions on crops dimensions and area
