@@ -73,7 +73,7 @@ def predict(images):
     model = tf.keras.models.load_model("ocr_model")
     return model.predict(images)
 
-train()
+#train()
 
 
 
