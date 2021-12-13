@@ -37,7 +37,7 @@ nums = []
 for plate_nums in segmented_plates:
     plate_nums = np.expand_dims(plate_nums, axis=0)
     print(plate_nums.shape)
-    all_nums = predict(resize(plate_nums, (1,28,28), anti_aliasing=True))
+    all_nums = np.argmax(predict(resize(plate_nums, (1,28,28), anti_aliasing=True)))
     nums.append(all_nums)
 print(nums)
 #for index, row in enumerate(license_plates_bounding_points):
