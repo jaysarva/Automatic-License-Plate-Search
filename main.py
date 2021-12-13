@@ -27,6 +27,7 @@ segmented_plates = segmentImage(bounded_plate)
 print(len(segmented_plates))
 #imageio.imwrite('segmentedImage.jpeg', segmented_plates[0])
 for plate_nums in segmented_plates:
+    print(plate_nums.shape)
     all_nums = predict(np.array(plate_nums))
 print(all_nums)
 #for index, row in enumerate(license_plates_bounding_points):
