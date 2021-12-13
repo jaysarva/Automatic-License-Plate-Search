@@ -64,7 +64,7 @@ def calculate_rough_accuracy():
             total += 1
         print(i)
         image = imread(image_path)
-        cropped = image[startY:endY][startX:endY]
+        cropped = image[startY:endY][startX:endX]
         cv2.rectangle(image, (startY, startX), (endY, endX),(255, 255, 0), 2)
         
         im = Image.fromarray(image)
