@@ -47,10 +47,10 @@ def segmentImage(image):
         subImages.append(subImage)
 
 
-    cur_img = subImages[3]
-    frame_normed = 255 * (cur_img - cur_img.min()) / (cur_img.max() - cur_img.min())
-    frame_normed = np.array(frame_normed, np.int)
+    #cur_img = subImages[3]
+    #frame_normed = 255 * (cur_img - cur_img.min()) / (cur_img.max() - cur_img.min())
+    #frame_normed = np.array(frame_normed, np.int)
 
-    cv2.imwrite("savedImage.png", frame_normed)
+    #cv2.imwrite("savedImage.png", frame_normed)
 
     return subImages
