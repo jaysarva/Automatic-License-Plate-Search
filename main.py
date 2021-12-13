@@ -26,11 +26,13 @@ bounded_plate = imread(bounded_image_path)
 segmented_plates = segmentImage(bounded_plate)
 print(len(segmented_plates))
 #imageio.imwrite('segmentedImage.jpeg', segmented_plates[0])
+nums = []
 for plate_nums in segmented_plates:
     plate_nums = np.expand_dims(plate_nums, axis=0)
     print(plate_nums.shape)
     all_nums = predict(np.array(plate_nums))
-print(all_nums)
+    nums.append(all_nums)
+print(nums)
 #for index, row in enumerate(license_plates_bounding_points):
 #    image = cv2.imread(license_plates_bounding_points[0])
 #    segmented_plates = map(lambda subIm: segmentImage(image[subIm[1]:subIm[3],subIm[0]:subIm[2]), license_plates_bounding_points)
