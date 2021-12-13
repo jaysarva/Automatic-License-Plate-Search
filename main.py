@@ -2,7 +2,7 @@ import numpy as np
 #from load_data import preprocessing
 #from model import create_model
 from ocr import train, predict
-from segmentation import segmentImage, detect
+from segmentation import segmentImage
 #from predict_box import predict_image
 #import tensorflow as tf 
 #import glob
@@ -25,8 +25,8 @@ bounded_image_path = 'cropped_licenses_v5/cropped_license2.png'
 bounded_plate = imread(bounded_image_path)
 #print(bounded_plate)
 
-#segmented_plates = segmentImage(bounded_plate)
-segmented_plates = detect(bounded_plate)
+segmented_plates = segmentImage(bounded_plate)
+#segmented_plates = detect(bounded_plate)
 print(len(segmented_plates))
 #print(segmented_plates[0])
 #cur_img = segmented_plates[0]
