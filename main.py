@@ -1,7 +1,7 @@
 import numpy as np
 #from load_data import preprocessing
 #from model import create_model
-from ocr import train, predict
+#from ocr import train, predict
 from segmentation import segmentImage
 #from predict_box import predict_image
 #import tensorflow as tf 
@@ -27,7 +27,7 @@ segmented_plates = segmentImage(bounded_plate)
 print(len(segmented_plates))
 #imageio.imwrite('segmentedImage.jpeg', segmented_plates[0])
 for plate_nums in segmented_plates:
-    print(plate_nums.shape)
+    plate_nums = np.expand_dims(plate_nums, axis=0)
     all_nums = predict(np.array(plate_nums))
 print(all_nums)
 #for index, row in enumerate(license_plates_bounding_points):
