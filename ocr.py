@@ -73,7 +73,8 @@ def predict(images):
     model = tf.keras.models.load_model("ocr_model")
     # return convert_result(model.predict(images))
     # print(model.predict(images).shape)
-    return convert_result(np.argmax(model.predict(images)))
+    # return convert_result(np.argmax(model.predict(images)))
+    return convert_result((model.predict(images)).argsort()[-3:][::-1])
 
 def convert_result(num):
     real = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", \
