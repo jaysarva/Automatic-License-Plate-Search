@@ -63,10 +63,8 @@ def calculate_rough_accuracy():
         if (abs(startX - row[1]) <= 0.3*w) and (abs(endX - row[3]) <= 0.3*w) and (abs(startY - row[2]) <= 0.3*h) and (abs(endY - row[4]) <= 0.3*h):
             total += 1
         print(i)
-        print([startX,startY,endX,endY])
         image = imread(image_path)
         cropped = image[startY:endY,startX:endX,:]
-        print(cropped)
         cv2.rectangle(image, (startY, startX), (endY, endX),(255, 255, 0), 2)
         
         im = Image.fromarray(image)
