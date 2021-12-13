@@ -78,7 +78,7 @@ def convert_result(num):
         "X", "Y", "Z"]
     return real[num]
 
-train()
+#train()
 
 
 

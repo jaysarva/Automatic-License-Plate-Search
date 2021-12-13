@@ -24,7 +24,8 @@ def create_model(rows):
         
         (filename, startX, startY, endX, endY) = row
 
-        image = imread("preprocessed_data/resized_images/Cars" + str(int(filename)) + ".png")
+        # image = imread("preprocessed_data/resized_images/Cars" + str(int(filename)) + ".png")
+        image = imread("train_data_v3/data/Cars" + str(int(filename)) + ".png")
         
         h = img_size
         w = img_size
@@ -45,7 +46,7 @@ def create_model(rows):
     data = data / 255.0
     
     print(np.shape(data))
-    split = train_test_split(data, targets, test_size=0.15, random_state=42)
+    split = train_test_split(data, targets, test_size=0.1, random_state=42)
     
     print("DONE 2")
 
@@ -75,7 +76,7 @@ def create_model(rows):
     print(model.summary())
 # train the network for bounding box regression
     print("[INFO] training bounding box regressor...")
-    H = model.fit(trainImages, trainTargets, validation_data=(testImages, testTargets), batch_size= 32, epochs= 50, verbose=1)
+    H = model.fit(trainImages, trainTargets, validation_data=(testImages, testTargets), batch_size= 32, epochs= 30, verbose=1)
     
     model.save("my_model", save_format="h5")
     print("Finish Saving the model")
@@ -83,7 +84,7 @@ def create_model(rows):
 
 
 
-file = open("boundingbox.csv")
+file = open("train_data_v3/boundingbox_net.csv")
 rows = np.loadtxt(file, delimiter=",")
 
 create_model(rows)
