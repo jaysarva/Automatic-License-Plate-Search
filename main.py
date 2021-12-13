@@ -1,7 +1,7 @@
 import numpy as np
 #from load_data import preprocessing
 #from model import create_model
-#from ocr import train, predict
+from ocr import train, predict
 from segmentation import segmentImage
 #from predict_box import predict_image
 #import tensorflow as tf 
