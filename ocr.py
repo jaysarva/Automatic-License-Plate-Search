@@ -72,7 +72,7 @@ def train():
 def predict(images):
     model = tf.keras.models.load_model("ocr_model")
     # return convert_result(model.predict(images))
-    print(model.predict(images).shape)
+    # print(model.predict(images).shape)
     return convert_result(np.argmax(model.predict(images)))
 
 def convert_result(num):
