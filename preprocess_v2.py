@@ -2,7 +2,6 @@ import os
 import shutil
 import xml.etree.ElementTree as ET
 import numpy as np
-import random
 import cv2
 import matplotlib.pyplot as plt
 import csv
