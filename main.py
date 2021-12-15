@@ -15,7 +15,7 @@ create_model(rows)
 
 calculate_rough_accuracy()
 
-train()
+# train()
 
 bounded_image_path = 'cropped_licenses_v5/cropped_license2.png'
 bounded_plate = imread(bounded_image_path)

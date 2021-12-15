@@ -52,6 +52,8 @@ def create_directory(path):
     os.makedirs(path)
    
 def calculate_rough_accuracy():
+    create_directory("licenses")
+    create_directory("cropped_licenses")
     file = open("test_data/boundingbox.csv")
     rows = np.loadtxt(file, delimiter=",")
     #print(rows)
@@ -73,11 +75,9 @@ def calculate_rough_accuracy():
         cv2.rectangle(image, (startY, startX), (endY, endX),(255, 255, 0), 2)
         
         im = Image.fromarray(image)
-        create_directory("licenses")
         im.save("licenses/license"+str(i)+".png")
 
         cropped_im = Image.fromarray(cropped)
-        create_directory("cropped_licenses")
         cropped_im.save("cropped_licenses/cropped_license"+str(i)+".png")
     
     print("Accuracy = " + str(total / n))
