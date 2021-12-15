@@ -1,4 +1,5 @@
 import numpy as np
+import argparse
 from preprocess_v2 import preprocessing
 from model import create_model
 from predict_box import calculate_rough_accuracy
@@ -7,15 +8,21 @@ from segmentation import segmentImage
 from matplotlib.image import imread
 from skimage.transform import resize
 
-preprocessing(training_size=0.85)
+parser = argparse.ArgumentParser()
+parser.add_argument('--t', '--train-model', action="store_true")
+args = parser.parse_args()
 
-file = open("train_data/boundingbox.csv")
-rows = np.loadtxt(file, delimiter=",")
-create_model(rows)
+preprocessing(training_size=0.9)
+
+if args.t:
+    file = open("train_data/boundingbox.csv")
+    rows = np.loadtxt(file, delimiter=",")
+    create_model(rows)
 
 calculate_rough_accuracy()
 
-# train()
+if args.t:
+    train()
 
 bounded_image_path = 'cropped_licenses_v5/cropped_license2.png'
 bounded_plate = imread(bounded_image_path)
