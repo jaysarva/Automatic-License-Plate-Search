@@ -94,10 +94,10 @@ def create_model(rows):
 
 
 
-file = open("train_data/boundingbox.csv")
-rows = np.loadtxt(file, delimiter=",")
+# file = open("train_data/boundingbox.csv")
+# rows = np.loadtxt(file, delimiter=",")
 
-create_model(rows)
+# create_model(rows)
 #print(rows)
 
  
