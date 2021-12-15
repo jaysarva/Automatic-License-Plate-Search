@@ -7,6 +7,9 @@ from tensorflow.keras.layers import \
     Conv2D, MaxPool2D, Dropout, Flatten, Dense
 
 from extra_keras_datasets import emnist
+
+import matplotlib.pyplot as plt
+
 #(input_train, target_train), (input_test, target_test) = emnist.load_data(type='bymerge')
 
 def train():
@@ -60,7 +63,7 @@ def train():
     model.compile(optimizer='adam',
               loss=loss_fn,
               metrics=['accuracy'])
-    model.fit(fixed_x_train, fixed_y_train, epochs=25)
+    H = model.fit(fixed_x_train, fixed_y_train, epochs=25)
     # loss, acc = model.evaluate(fixed_x_test, fixed_y_test, verbose=2)
     # print("Trained model, accuracy: {:5.2f}%".format(100 * acc))
 
