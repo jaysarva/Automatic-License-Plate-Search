@@ -68,6 +68,18 @@ def train():
 
     model.evaluate(fixed_x_test,  fixed_y_test, verbose=2)
     model.summary()
+    
+    
+    N = 25
+    plt.style.use("ggplot")
+    plt.figure()
+    plt.plot(np.arange(0, N), H.history["loss"], label="train_loss")
+    plt.plot(np.arange(0, N), H.history["val_loss"], label="val_loss")
+    plt.title("OCR Loss on Training Set")
+    plt.xlabel("Epoch #")
+    plt.ylabel("Loss")
+    plt.legend(loc="lower left")
+    plt.savefig("ocr_loss_graph.png")
 
 def predict(images):
     model = tf.keras.models.load_model("ocr_model")
