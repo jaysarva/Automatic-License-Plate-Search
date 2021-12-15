@@ -1,9 +1,9 @@
 import numpy as np
-#from load_data import preprocessing
-#from model import create_model
+from preprocess_v2 import preprocessing
+from model import create_model
+from predict_box import calculate_rough_accuracy
 from ocr import train, predict
 from segmentation import segmentImage
-#from predict_box import predict_image
 #import tensorflow as tf 
 #import glob
 import cv2
@@ -11,15 +11,13 @@ import imageio
 from matplotlib.image import imread
 from skimage.transform import resize
 
+preprocessing()
 
-#file = open("boundingbox.csv")
-#rows = np.loadtxt(file, delimiter=",")
-# use saved weights for ocr model
-#license_plate_detect = tf.keras.models.load_model("my_model.h5")
+file = open("train_data_v3/boundingbox_net.csv")
+rows = np.loadtxt(file, delimiter=",")
+create_model(rows)
 
-#images = glob.glob("preprocessed_data/resized_images/*.png")[:10]
-
-#license_plates_bounding_points = [predict_image(path, license_plate_detect) for path in images]
+calculate_rough_accuracy()
 
 bounded_image_path = 'cropped_licenses_v5/cropped_license2.png'
 bounded_plate = imread(bounded_image_path)

@@ -196,7 +196,7 @@ def transformsXY(path, bounding_box):
 ###################
 
 def preprocessing(output_image_size=224, training_size=0.9):
-    size = output_image_size
+    print("Begin preprocessing ...")
 
     # Input paths
     xml_images_read_path = "raw_data/dataset1/images"
@@ -232,7 +232,7 @@ def preprocessing(output_image_size=224, training_size=0.9):
             img = read_image(read_path)
             new_img_info = boundingbox_location_float_to_int(img, img_info)
             bounding_box = create_boundingbox_array_csv(new_img_info)
-            relocated_boundingbox = preprocess_image(img, train_images_write_path, bounding_box, size, index)
+            relocated_boundingbox = preprocess_image(img, train_images_write_path, bounding_box, output_image_size, index)
             boundingbox_info = [index] + list(relocated_boundingbox)
             train_boundingboxes_info.append(boundingbox_info)
             index += 1
@@ -241,7 +241,7 @@ def preprocessing(output_image_size=224, training_size=0.9):
         read_path = xml_images_read_path + "/Cars" + str(img_info[0]) + ".png"
         img = read_image(read_path)
         bounding_box = create_boundingbox_array_xml(img_info)
-        relocated_boundingbox = preprocess_image(img, train_images_write_path, bounding_box, size, index)
+        relocated_boundingbox = preprocess_image(img, train_images_write_path, bounding_box, output_image_size, index)
         boundingbox_info = [index] + list(relocated_boundingbox)
         train_boundingboxes_info.append(boundingbox_info)
         index += 1
@@ -258,7 +258,7 @@ def preprocessing(output_image_size=224, training_size=0.9):
             img = read_image(read_path)
             new_img_info = boundingbox_location_float_to_int(img, img_info)
             bounding_box = create_boundingbox_array_csv(new_img_info)
-            relocated_boundingbox = preprocess_image(img, test_images_write_path, bounding_box, size, index)
+            relocated_boundingbox = preprocess_image(img, test_images_write_path, bounding_box, output_image_size, index)
             boundingbox_info = [index] + list(relocated_boundingbox)
             test_boundingboxes_info.append(boundingbox_info)
             index += 1
@@ -267,14 +267,15 @@ def preprocessing(output_image_size=224, training_size=0.9):
         read_path = xml_images_read_path + "/Cars" + str(img_info[0]) + ".png"
         img = read_image(read_path)
         bounding_box = create_boundingbox_array_xml(img_info)
-        relocated_boundingbox = preprocess_image(img, test_images_write_path, bounding_box, size, index)
+        relocated_boundingbox = preprocess_image(img, test_images_write_path, bounding_box, output_image_size, index)
         boundingbox_info = [index] + list(relocated_boundingbox)
         test_boundingboxes_info.append(boundingbox_info)
         index += 1
     np.savetxt(test_boundingboxes_write_path, test_boundingboxes_info, delimiter=',', fmt='%d')
 
-if __name__ == "__main__":
-    print("Begin preprocessing ...")
-    preprocessing()
     print("Preprocessing Done!")
+
+if __name__ == "__main__":
+    preprocessing()
+    
     
