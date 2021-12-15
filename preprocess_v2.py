@@ -85,12 +85,12 @@ def boundingbox_to_mask(bounding_box, img):
 # Convert a mask to a bounding box array
 def mask_to_boundingbox(mask):
     # INPUT: mask (2D NumPy array containing 1's if it is a bounding box's location, otherwise 0's)
-    # OUTPUT: 1D NumPy array with size = 4 containing bounding box's location [x_min y_min x_max y_max]
+    # OUTPUT: 1D NumPy array with size = 4 containing bounding box's location [y_min x_min y_max x_max]
     rows, cols = np.nonzero(mask)
     # If bounding box does not exist, return 1D NumPy array of 4 zeros
     if len(rows) == 0 or len(cols) == 0:
         return np.zeros(4)
-    return np.array([np.min(cols), np.min(rows), np.max(cols), np.max(rows)])
+    return np.array([np.min(rows), np.min(cols), np.max(rows), np.max(cols)])
 
 # Create a bounding box array from each image's info in 2D NumPy array images' info extracted from .xml files
 def create_boundingbox_array_xml(row):
@@ -112,7 +112,7 @@ def preprocess_image(img, write_directory, bounding_box, size, index):
     #   bounding_box (1D NumPy array with size = 4 containing bounding box's location [x_min y_min x_max y_max]), 
     #   size (size of preprocessed square image), 
     #   index (image's index that helps writing the image)
-    # OUTPUT: 1D NumPy array with size = 4 containing relocated bounding box's location [x_min y_min x_max y_max]
+    # OUTPUT: 1D NumPy array with size = 4 containing relocated bounding box's location [y_min x_min y_max x_max]
     # Resize the image to be a square image with the given size
     resize_img = cv2.resize(img, (size, size))
     # Relocate the bounding box's location corresponding to the image resizing
