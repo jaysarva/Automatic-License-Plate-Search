@@ -7,6 +7,9 @@ from tensorflow.keras.layers import \
     Conv2D, MaxPool2D, Dropout, Flatten, Dense
 
 from extra_keras_datasets import emnist
+
+import matplotlib.pyplot as plt
+
 #(input_train, target_train), (input_test, target_test) = emnist.load_data(type='bymerge')
 
 def train():
@@ -60,7 +63,7 @@ def train():
     model.compile(optimizer='adam',
               loss=loss_fn,
               metrics=['accuracy'])
-    model.fit(fixed_x_train, fixed_y_train, epochs=25)
+    H = model.fit(fixed_x_train, fixed_y_train, epochs=25)
     # loss, acc = model.evaluate(fixed_x_test, fixed_y_test, verbose=2)
     # print("Trained model, accuracy: {:5.2f}%".format(100 * acc))
 
@@ -68,6 +71,19 @@ def train():
 
     model.evaluate(fixed_x_test,  fixed_y_test, verbose=2)
     model.summary()
+    
+    
+    N = 25
+    plt.style.use("ggplot")
+    plt.figure()
+    plt.plot(np.arange(0, N), H.history["loss"], label="train_loss")
+    # plt.plot(np.arange(0, N), H.history["val_loss"], label="val_loss")
+    plt.plot(np.arange(0, N), H.history["accuracy"], label="accuracy")
+    plt.title("OCR Loss/Accuracy on Training Set")
+    plt.xlabel("Epoch #")
+    plt.ylabel("Loss/Accuracy")
+    plt.legend(loc="lower left")
+    plt.savefig("ocr_loss_graph.png")
 
 def predict(images):
     model = tf.keras.models.load_model("ocr_model")
