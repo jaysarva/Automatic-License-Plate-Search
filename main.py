@@ -9,19 +9,20 @@ from matplotlib.image import imread
 from skimage.transform import resize
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--t', '--train-model', action="store_true")
+parser.add_argument('--t1', '--train-VGG-model', action="store_true")
+parser.add_argument('--t2', '--train-OCR-model', action="store_true")
 args = parser.parse_args()
 
 preprocessing(training_size=0.9)
 
-if args.t:
+if args.t1:
     file = open("train_data/boundingbox.csv")
     rows = np.loadtxt(file, delimiter=",")
     create_model(rows)
 
 calculate_rough_accuracy()
 
-if args.t:
+if args.t2:
     train()
 
 bounded_image_path = 'cropped_licenses_v5/cropped_license2.png'
