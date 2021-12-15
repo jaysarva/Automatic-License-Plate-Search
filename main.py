@@ -28,7 +28,7 @@ calculate_rough_accuracy()
 if args.t2:
     train()
 
-bounded_image_path = 'cropped_licenses_v5/cropped_license23.png'
+bounded_image_path = 'cropped_licenses/cropped_license23.png'
 bounded_plate = imread(bounded_image_path)
 
 segmented_plates = segmentImage(bounded_plate)

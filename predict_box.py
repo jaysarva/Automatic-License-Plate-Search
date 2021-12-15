@@ -82,4 +82,4 @@ def calculate_rough_accuracy():
     
     print("Accuracy = " + str(total / n))
                  
-calculate_rough_accuracy()
+# calculate_rough_accuracy()
