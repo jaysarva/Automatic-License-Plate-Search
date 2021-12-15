@@ -1,15 +1,12 @@
 import numpy as np
-<<<<<<< HEAD
 #from load_data import preprocessing
 #from model import create_model
 #from ocr import train, predict
-=======
 import argparse
 from preprocess_v2 import preprocessing
 from model import create_model
 from predict_box import calculate_rough_accuracy
 from ocr import train, predict
->>>>>>> 622bcd87f749980302eaf3333de1e967d07d06a8
 from segmentation import segmentImage
 from matplotlib.image import imread
 from skimage.transform import resize
@@ -19,9 +16,6 @@ parser.add_argument('--t1', '--train-VGG-model', action="store_true")
 parser.add_argument('--t2', '--train-OCR-model', action="store_true")
 args = parser.parse_args()
 
-<<<<<<< HEAD
-bounded_image_path = 'cropped_licenses_v5/cropped_license2.png'
-=======
 preprocessing(training_size=0.9)
 
 if args.t1:
@@ -35,7 +29,6 @@ if args.t2:
     train()
 
 bounded_image_path = 'cropped_licenses_v5/cropped_license23.png'
->>>>>>> 622bcd87f749980302eaf3333de1e967d07d06a8
 bounded_plate = imread(bounded_image_path)
 
 segmented_plates = segmentImage(bounded_plate)
