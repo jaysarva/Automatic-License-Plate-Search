@@ -3,6 +3,7 @@ import numpy as np
 from skimage.io import imread
 import matplotlib.pyplot as plt
 import os
+import shutil
 from PIL import Image
 import cv2
 
@@ -45,7 +46,10 @@ def predict_image(image_path, model):
     
     return [image_path, startX, startY, endX, endY]
 
-
+def create_directory(path):
+    if os.path.exists(path):
+        shutil.rmtree(path)
+    os.makedirs(path)
    
 def calculate_rough_accuracy():
     file = open("test_data/boundingbox.csv")
@@ -69,9 +73,11 @@ def calculate_rough_accuracy():
         cv2.rectangle(image, (startY, startX), (endY, endX),(255, 255, 0), 2)
         
         im = Image.fromarray(image)
+        create_directory("licenses")
         im.save("licenses/license"+str(i)+".png")
 
         cropped_im = Image.fromarray(cropped)
+        create_directory("cropped_licenses")
         cropped_im.save("cropped_licenses/cropped_license"+str(i)+".png")
     
     print("Accuracy = " + str(total / n))
