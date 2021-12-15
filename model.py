@@ -7,7 +7,7 @@ from tensorflow.keras.optimizers import Adam
 from skimage.io import imread
 
 from sklearn.model_selection import train_test_split
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import numpy as np
 import io
 import csv
@@ -80,6 +80,17 @@ def create_model(rows):
     
     model.save("my_model", save_format="h5")
     print("Finish Saving the model")
+    N = 30
+    plt.style.use("ggplot")
+    plt.figure()
+    plt.plot(np.arange(0, N), H.history["loss"], label="train_loss")
+    plt.plot(np.arange(0, N), H.history["val_loss"], label="val_loss")
+    plt.title("Bounding Box Regression Loss on Training Set")
+    plt.xlabel("Epoch #")
+    plt.ylabel("Loss")
+    plt.legend(loc="lower left")
+    plt.savefig("license_loss_graph.png")
+    print("Finish Plotting the loss graph")
 
 
 
