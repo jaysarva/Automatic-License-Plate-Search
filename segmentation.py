@@ -23,10 +23,11 @@ def segmentImage(image):
     #cv2.imwrite(new_path,image)
 
     blurred = skimage.filters.gaussian(binarized)
-    #frame_normed = 255 * (blurred - blurred.min()) / (blurred.max() - blurred.min())
-    #frame_normed = np.array(frame_normed, np.int)
+    
+    frame_normed = 255 * (blurred - blurred.min()) / (blurred.max() - blurred.min())
+    frame_normed = np.array(frame_normed, np.int)
 
-    #cv2.imwrite("savedImage.png", frame_normed)
+    cv2.imwrite("savedImage.png", frame_normed)
     # find histograms of horizontal lines, and if above certain threshold, determine upper/lower bounds of characters
     vertical_threshold = 0.5
     row_histograms = np.average(blurred,axis=1)
