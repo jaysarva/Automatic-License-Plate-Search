@@ -16,7 +16,7 @@ parser.add_argument('--t1', '--train-VGG-model', action="store_true")
 parser.add_argument('--t2', '--train-OCR-model', action="store_true")
 args = parser.parse_args()
 
-preprocessing(training_size=0.9)
+preprocessing(training_size=0.85)
 
 if args.t1:
     file = open("train_data/boundingbox.csv")
