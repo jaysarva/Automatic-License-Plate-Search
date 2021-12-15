@@ -4,16 +4,16 @@ from model import create_model
 from predict_box import calculate_rough_accuracy
 from ocr import train, predict
 from segmentation import segmentImage
-#import tensorflow as tf 
-#import glob
-import cv2
-import imageio
+# import tensorflow as tf 
+# import glob
+# import cv2
+# import imageio
 from matplotlib.image import imread
 from skimage.transform import resize
 
-preprocessing()
+preprocessing(training_size=0.85)
 
-file = open("train_data_v3/boundingbox_net.csv")
+file = open("train_data/boundingbox.csv")
 rows = np.loadtxt(file, delimiter=",")
 create_model(rows)
 
@@ -21,10 +21,8 @@ calculate_rough_accuracy()
 
 bounded_image_path = 'cropped_licenses_v5/cropped_license2.png'
 bounded_plate = imread(bounded_image_path)
-#print(bounded_plate)
 
 segmented_plates = segmentImage(bounded_plate)
-#segmented_plates = detect(bounded_plate)
 print(len(segmented_plates))
 #print(segmented_plates[0])
 #cur_img = segmented_plates[0]

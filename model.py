@@ -24,8 +24,7 @@ def create_model(rows):
         
         (filename, startX, startY, endX, endY) = row
 
-        # image = imread("preprocessed_data/resized_images/Cars" + str(int(filename)) + ".png")
-        image = imread("train_data_v3/data/Cars" + str(int(filename)) + ".png")
+        image = imread("train_data/data/Cars" + str(int(filename)) + ".png")
         
         h = img_size
         w = img_size
@@ -95,7 +94,7 @@ def create_model(rows):
 
 
 
-file = open("train_data_v3/boundingbox_net.csv")
+file = open("train_data/boundingbox.csv")
 rows = np.loadtxt(file, delimiter=",")
 
 create_model(rows)
