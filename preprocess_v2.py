@@ -197,7 +197,7 @@ def transformsXY(path, bounding_box):
 ## MAIN FUNCTION ##
 ###################
 
-def preprocessing(output_image_size, training_size=0.9):
+def preprocessing(output_image_size=224, training_size=0.9):
     size = output_image_size
 
     # Input paths
@@ -277,6 +277,6 @@ def preprocessing(output_image_size, training_size=0.9):
 
 if __name__ == "__main__":
     print("Begin preprocessing ...")
-    preprocessing(output_image_size=224)
+    preprocessing()
     print("Preprocessing Done!")
     
