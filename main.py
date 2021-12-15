@@ -4,10 +4,6 @@ from model import create_model
 from predict_box import calculate_rough_accuracy
 from ocr import train, predict
 from segmentation import segmentImage
-# import tensorflow as tf 
-# import glob
-# import cv2
-# import imageio
 from matplotlib.image import imread
 from skimage.transform import resize
 
