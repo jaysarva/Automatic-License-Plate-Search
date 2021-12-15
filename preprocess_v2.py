@@ -133,7 +133,12 @@ def create_directory(path):
         shutil.rmtree(path)
     os.makedirs(path)
 
+# Convert the bounding box's location from ratio of height/width into integers
 def boundingbox_location_float_to_int(img, img_info):
+    # INPUT: 
+    #   img (3D NumPy array of image data), 
+    #   img_info (1D NumPy array containing single image's info [row_num x_min y_min x_max y_max]) in float values
+    # OUTPUT: 1D NumPy array containing single image's info [row_num x_min y_min x_max y_max] in integer values
     height, width, _ = img.shape
     new_img_info = [0, 0, 0, 0, 0]
     new_img_info[0] = int(img_info[0])
@@ -143,12 +148,18 @@ def boundingbox_location_float_to_int(img, img_info):
     new_img_info[4] = round(float(img_info[4]) * height)
     return new_img_info
 
+# Find whether the image annotated with .csv file exists
 def find_csv_read_path(image_file, full_paths):
     for path in full_paths:
         if image_file in path:
             return True
     return False
 
+########################
+## DATA VISUALIZATION ##
+########################
+
+# Visualizer
 def show_corner_bb(im, bb):
     def create_corner_rect(bb, color="red"):
         bb = np.array(bb, dtype=np.float32)
@@ -161,82 +172,33 @@ def show_corner_bb(im, bb):
 ## DATA AUGMENTATION ##
 #######################
 
-def crop(img, r, c, target_r, target_c): 
-    return img[r:r+target_r, c:c+target_c]
-
-def random_crop(x, r_pix=8):
-    r, c, _ = x.shape
-    c_pix = round(r_pix*c/r)
-    rand_r = random.uniform(0, 1)
-    rand_c = random.uniform(0, 1)
-    start_r = np.floor(2*rand_r*r_pix).astype(int)
-    start_c = np.floor(2*rand_c*c_pix).astype(int)
-    return crop(x, start_r, start_c, r-2*r_pix, c-2*c_pix)
-
-def center_crop(x, r_pix=8):
-    r, c, _ = x.shape
-    c_pix = round(r_pix*c/r)
-    return crop(x, r_pix, c_pix, r-2*r_pix, c-2*c_pix)
-
-def rotate_cv(im, deg, y=False, mode=cv2.BORDER_REFLECT, interpolation=cv2.INTER_AREA):
-    r,c,*_ = im.shape
-    M = cv2.getRotationMatrix2D((c/2,r/2),deg,1)
-    if y:
-        return cv2.warpAffine(im, M,(c,r), borderMode=cv2.BORDER_CONSTANT)
-    return cv2.warpAffine(im,M,(c,r), borderMode=mode, flags=cv2.WARP_FILL_OUTLIERS+interpolation)
-
-def random_cropXY(x, Y, r_pix=8):
-    r, c, _ = x.shape
-    c_pix = round(r_pix*c/r)
-    rand_r = random.uniform(0, 1)
-    rand_c = random.uniform(0, 1)
-    start_r = np.floor(2*rand_r*r_pix).astype(int)
-    start_c = np.floor(2*rand_c*c_pix).astype(int)
-    xx = crop(x, start_r, start_c, r-2*r_pix, c-2*c_pix)
-    YY = crop(Y, start_r, start_c, r-2*r_pix, c-2*c_pix)
-    return xx, YY
-
-def transformsXY(path, bb, transforms):
-    x = cv2.imread(str(path)).astype(np.float32)
-    x = cv2.cvtColor(x, cv2.COLOR_BGR2RGB)/255
-    Y = boundingbox_to_mask(bb, x)
-    if transforms:
-        rdeg = (np.random.random()-.50)*20
-        x = rotate_cv(x, rdeg)
-        Y = rotate_cv(Y, rdeg, y=True)
-        if np.random.random() > 0.5: 
-            x = np.fliplr(x).copy()
-            Y = np.fliplr(Y).copy()
-        x, Y = random_cropXY(x, Y)
+def rotate_image(img, deg, isMask, mode=cv2.BORDER_REFLECT, interpolation=cv2.INTER_AREA):
+    height, width, _ = img.shape
+    rotationMatrix = cv2.getRotationMatrix2D((height/2, width/2), deg, 1)
+    if isMask:
+        return cv2.warpAffine(img, rotationMatrix, (height, width), borderMode=cv2.BORDER_CONSTANT)
     else:
-        x, Y = center_crop(x), center_crop(Y)
-    return x, mask_to_boundingbox(Y)
+        return cv2.warpAffine(img, rotationMatrix, (height, width), borderMode=mode, flags=cv2.WARP_FILL_OUTLIERS+interpolation)
+
+def transformsXY(path, bounding_box):
+    img = cv2.imread(str(path)).astype(np.float32)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)/255
+    mask = boundingbox_to_mask(bounding_box, img)
+    rotation_deg = (np.random.random() - 0.5) * 20
+    img = rotate_image(img, rotation_deg, False)
+    mask = rotate_image(mask, rotation_deg, True)
+    if np.random.random() > 0.5: 
+        img = np.fliplr(img).copy()
+        mask = np.fliplr(mask).copy()
+    return img, mask_to_boundingbox(mask)
 
 
 ###################
-## EXPORT RESULT ##
+## MAIN FUNCTION ##
 ###################
 
-# sample_img_num = 400
-# read_path = Path(str(path) + '/Cars' + str(train_data[sample_img_num][0]) + '.png')
-# im = cv2.imread(str(read_path))
-# im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
-# show_corner_bb(im, train_data[sample_img_num][7:])
-
-# im, bb = transformsXY(str(read_path), train_data[sample_img_num][7:], True)
-# show_corner_bb(im, bb)
-
-# sample_img_num = 200
-# read_path = Path(find_csv_read_path(csv_train_data[sample_img_num][0], csv_images))
-# im = cv2.imread(str(read_path))
-# im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
-# show_corner_bb(im, csv_train_data[sample_img_num][9:])
-
-# im, bb = transformsXY(str(read_path), csv_train_data[sample_img_num][9:], True)
-# show_corner_bb(im, bb)
-
-def preprocessing():
-    size = 224
+def preprocessing(output_image_size, training_size=0.9):
+    size = output_image_size
 
     # Input paths
     xml_images_read_path = "raw_data/dataset1/images"
@@ -254,13 +216,18 @@ def preprocessing():
     create_directory(test_images_write_path)
     test_boundingboxes_write_path = test_images_directory_path + "/boundingbox.csv"
     
-    # Training Data
     csv_images_info = get_image_info_csv(csv_annotations_read_path)
     csv_images_info = np.delete(csv_images_info, 1, 1)
+    csv_images_filelist = filelist(csv_images_read_path, ".jpg")
+    csv_cutoff_index = int(training_size * len(csv_images_info))
+    xml_images_info = get_image_info_xml(xml_annotations_read_path)
+    xml_cutoff_index = int(training_size * len(xml_images_info))
+
+    # Training Data
+    csv_train_images_info = csv_images_info[:csv_cutoff_index]
     index = 0
     train_boundingboxes_info = []
-    csv_images_filelist = filelist(csv_images_read_path, ".jpg")
-    for img_info in csv_images_info:
+    for img_info in csv_train_images_info:
         isExist = find_csv_read_path("car" + str(img_info[0]) + ".jpg", csv_images_filelist)
         if isExist:
             read_path = csv_images_read_path + "/car" + str(img_info[0]) + ".jpg"
@@ -271,8 +238,8 @@ def preprocessing():
             boundingbox_info = [index] + list(relocated_boundingbox)
             train_boundingboxes_info.append(boundingbox_info)
             index += 1
-    xml_images_info = get_image_info_xml(xml_annotations_read_path)[:100]
-    for img_info in xml_images_info:
+    xml_train_images_info = xml_images_info[:xml_cutoff_index]
+    for img_info in xml_train_images_info:
         read_path = xml_images_read_path + "/Cars" + str(img_info[0]) + ".png"
         img = read_image(read_path)
         bounding_box = create_boundingbox_array_xml(img_info)
@@ -283,58 +250,33 @@ def preprocessing():
     np.savetxt(train_boundingboxes_write_path, train_boundingboxes_info, delimiter=',', fmt='%d')
     
     # Testing Data
-
-    
-
-    # csv_images = filelist(Path("raw_data/dataset2"), '.jpg') + filelist(Path("raw_data/dataset3"), '.jpg') + filelist(Path("raw_data/dataset4"), '.jpg')
-    # csv_annotations_paths = [Path("raw_data/dataset2/annotations.csv"), Path("raw_data/dataset3/annotations.csv"), Path("raw_data/dataset4/annotations.csv")]
-    csv_images = filelist(Path("raw_data/dataset2"), '.jpg') + filelist(Path("raw_data/dataset4"), '.jpg')
-    csv_annotations_paths = [Path("raw_data/dataset2/annotations.csv"), Path("raw_data/dataset4/annotations.csv")]
-    
-    csv_train_data = np.array(get_train_data_info_csv(csv_annotations_paths))
-
-    # new_boundingboxes = []
-    index = train_data.shape[0]
-    modified_csv_train_data = []
-    for img_info in csv_train_data:
-        read_path = find_csv_read_path(img_info[0], csv_images)
-        if read_path != None:
-            # new_boundingbox = resize_image_boundingbox_csv(Path(read_path), resized_data_path, create_boundingbox_array_csv(img_info), 224, index)
+    csv_test_images_info = csv_images_info[csv_cutoff_index:]
+    index = 0
+    test_boundingboxes_info = []
+    for img_info in csv_test_images_info:
+        isExist = find_csv_read_path("car" + str(img_info[0]) + ".jpg", csv_images_filelist)
+        if isExist:
+            read_path = csv_images_read_path + "/car" + str(img_info[0]) + ".jpg"
+            img = read_image(read_path)
+            new_img_info = boundingbox_location_float_to_int(img, img_info)
+            bounding_box = create_boundingbox_array_csv(new_img_info)
+            relocated_boundingbox = preprocess_image(img, test_images_write_path, bounding_box, size, index)
+            boundingbox_info = [index] + list(relocated_boundingbox)
+            test_boundingboxes_info.append(boundingbox_info)
             index += 1
-            # new_boundingboxes.append(new_boundingbox)
-            new_row = list(img_info) + [str(x) for x in new_boundingbox]
-            modified_csv_train_data.append(new_row)
-    # csv_train_data = np.hstack((csv_train_data, new_boundingboxes))
-    csv_train_data = np.array(modified_csv_train_data)
-    index_array = np.arange(train_data.shape[0], index).reshape(index - train_data.shape[0], 1)
-    csv_train_data = np.hstack((index_array, csv_train_data))
-    output = np.hstack((np.reshape(train_data[:, 7], (train_data.shape[0], 1)), train_data[:, 8:]))
-
-    output2 = np.delete(csv_train_data, 1, 1)
-    output2 = np.delete(output2, 3, 1)
-    output2 = output2.astype(np.int)
-    output2 = np.hstack((np.reshape(output2[:, 0], (output2.shape[0], 1)), output2[:, 7:]))
-
-    # total_output = np.vstack((output, output2))
-    total_output = output
-    np.savetxt('boundingbox.csv', total_output, delimiter=',', fmt='%d')
+    xml_test_images_info = xml_images_info[xml_cutoff_index:]
+    for img_info in xml_test_images_info:
+        read_path = xml_images_read_path + "/Cars" + str(img_info[0]) + ".png"
+        img = read_image(read_path)
+        bounding_box = create_boundingbox_array_xml(img_info)
+        relocated_boundingbox = preprocess_image(img, test_images_write_path, bounding_box, size, index)
+        boundingbox_info = [index] + list(relocated_boundingbox)
+        test_boundingboxes_info.append(boundingbox_info)
+        index += 1
+    np.savetxt(test_boundingboxes_write_path, test_boundingboxes_info, delimiter=',', fmt='%d')
 
 if __name__ == "__main__":
-    # preprocessing()
-    # plt.imshow(im)
-    # plt.show()
-    # print(np.zeros(4))
-    # print(np.zeros(4, dtype=np.float32))
-    # bounding_box = [1, 2, 3, 5]
-    # bounding_box = np.array(bounding_box)
-    # mask = np.zeros((6, 6))
-    # mask[bounding_box[1]:bounding_box[3]+1, bounding_box[0]:bounding_box[2]+1] = 1
-    # print(mask)
-    # rows, cols = np.nonzero(mask)
-    # print("rows:", rows)
-    # print("cols:", cols)
-    # bb = np.array([np.min(cols), np.min(rows), np.max(cols), np.max(rows)])
-    # print(bb)
-    print("Begin the preprocessing process ...")
-    preprocessing()
+    print("Begin preprocessing ...")
+    preprocessing(output_image_size=224)
+    print("Preprocessing Done!")
     
